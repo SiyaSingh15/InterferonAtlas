@@ -1,0 +1,12 @@
+data/raw/
+data/processed/
+data/tcga/
+results/figures/
+results/tables/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+*.h5ad
+*.loom
+.env
+.DS_Store

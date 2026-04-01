@@ -1,0 +1,87 @@
+{
+  "_meta": {
+    "version": "v1",
+    "description": "InterferonAtlas IFN signature modules — curated gene lists for IFN Spectrum Score computation",
+    "date_created": "2026-04",
+    "author": "Siya, IISER Tirupati",
+    "scoring_method": "decoupler AUCell or WSUM per cell/sample",
+    "notes": "Gene symbols are HGNC. Cross-check against your dataset's gene vocabulary before scoring."
+  },
+  "modules": {
+    "M1_acute_IFN_antiviral": {
+      "label": "Acute IFN-I antiviral",
+      "biology": "Early innate antiviral response; type I IFN (IFN-α/β) stimulated genes",
+      "direction": "positive_pole",
+      "reference": "Schneider et al. 2014 Annu Rev Immunol; Interferome DB (type I ISGs)",
+      "genes": [
+        "IFIT1", "IFIT2", "IFIT3", "IFIT5",
+        "MX1", "MX2",
+        "OAS1", "OAS2", "OAS3", "OASL",
+        "ISG15", "ISG20",
+        "RSAD2", "HERC5", "HERC6",
+        "DDX58", "IFIH1",
+        "IFI6", "IFI27", "IFI44", "IFI44L"
+      ],
+      "TODO": "Verify these 20 genes are in your scRNA-seq feature space. Add/remove based on Interferome DB query."
+    },
+    "M2_chronic_IFN_TME": {
+      "label": "Chronic IFN-γ TME",
+      "biology": "Tumor-driven chronic IFN-γ signaling; immune suppression in TME",
+      "direction": "negative_pole",
+      "reference": "Benci et al. 2019 Cell; TCGA pan-cancer IFN-γ signature",
+      "genes": [
+        "STAT1", "STAT2", "STAT3",
+        "IRF1", "IRF2", "IRF7", "IRF9",
+        "CXCL9", "CXCL10", "CXCL11",
+        "CD274", "PDCD1LG2",
+        "IDO1", "PSMB8", "PSMB9",
+        "TAP1", "TAP2",
+        "B2M", "HLA-A", "HLA-B", "HLA-C"
+      ],
+      "TODO": "Review Benci 2019 Table S1 for additional genes. HLA genes are highly variable in scRNA-seq — assess dropout rates."
+    },
+    "M3_exhaustion_IFN_overlap": {
+      "label": "Exhaustion-IFN overlap",
+      "biology": "T cell dysfunction signature co-occurring with chronic IFN signaling",
+      "direction": "negative_pole",
+      "reference": "Wherry & Kurachi 2015 Nat Rev Immunol; Sade-Feldman 2018 Cell GSE120575",
+      "genes": [
+        "TOX", "TOX2",
+        "PDCD1", "LAG3", "HAVCR2", "TIGIT", "CTLA4",
+        "ENTPD1", "BATF",
+        "NR4A1", "NR4A2", "NR4A3",
+        "PRDM1", "EOMES",
+        "CD244", "CD160"
+      ],
+      "TODO": "These come from your own CD4+ T cell dataset — validate with your Scanpy marker gene analysis first."
+    },
+    "M4_IFN_suppression_evasion": {
+      "label": "IFN suppression / evasion",
+      "biology": "Negative regulators of IFN signaling; tumor immune escape machinery",
+      "direction": "negative_pole",
+      "reference": "TCGA pan-cancer; Schneider et al. 2014",
+      "genes": [
+        "SOCS1", "SOCS3",
+        "USP18", "USP41",
+        "TRIM24", "TRIM33", "TRIM56",
+        "PTPN2", "PTPN11",
+        "RNF31",
+        "IFNAR1", "IFNAR2",
+        "NFKBIA"
+      ],
+      "TODO": "Cross-check TCGA evasion literature (Zaretsky 2016 NEJM; Patel 2017 Nature). Some TRIM genes may be noisy."
+    }
+  },
+  "scoring_config": {
+    "method": "AUCell",
+    "weights": {
+      "M1_acute_IFN_antiviral": 1.0,
+      "M2_chronic_IFN_TME": -1.0,
+      "M3_exhaustion_IFN_overlap": -0.5,
+      "M4_IFN_suppression_evasion": -0.3
+    },
+    "normalization": "min_max_to_0_1",
+    "bifurcation_metric": "shannon_entropy_across_4_module_scores",
+    "notes": "Weights are initial estimates. Recalibrate using TCGA anchor samples (pure acute vs pure chronic) in notebook 01."
+  }
+}

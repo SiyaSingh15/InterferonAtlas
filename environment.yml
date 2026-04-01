@@ -1,0 +1,51 @@
+name: interferonAtlas
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+
+dependencies:
+  - python=3.10
+  - pip
+
+  # Core scientific stack
+  - numpy>=1.24
+  - pandas>=2.0
+  - scipy>=1.11
+  - scikit-learn>=1.3
+
+  # Single-cell analysis
+  - scanpy>=1.9
+  - anndata>=0.9
+  - leidenalg
+  - python-igraph
+
+  # Visualization
+  - matplotlib>=3.7
+  - seaborn>=0.12
+  - plotly>=5.15
+
+  # Notebook
+  - jupyter
+  - ipykernel
+  - ipywidgets
+
+  # Utilities
+  - tqdm
+  - pyyaml
+
+  - pip:
+    # IFN scoring methods
+    - decoupler>=1.4        # AUCell, WSUM, MLM scoring methods
+    - pydeseq2              # for bulk RNA-seq differential expression
+
+    # Trajectory inference
+    - scvelo                # RNA velocity (optional but useful)
+
+    # Data access
+    - GEOparse              # download GEO datasets programmatically
+    - requests
+
+    # Development
+    - black
+    - pytest
